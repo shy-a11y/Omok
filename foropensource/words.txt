@@ -1,0 +1,5 @@
+universoty
+class
+home
+new
+lecture
