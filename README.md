@@ -5,7 +5,7 @@ Thread, Socket, Stream, GUI을 주로 사용했으며 Header 프로토콜을 만
 
 [시연영상 (유튜브) : 1분 55초 입니다.](https://www.youtube.com/watch?v=7EFXMMnH98s)
 
-![image](https://github.com/gd-hi/Omok/assets/148930703/45058f0a-de18-44df-9096-3f336b01affb)
+![image](https://github.com/gd-hi/Omok/assets/148930703/c5f6a8ba-8b34-4bf2-8e42-f889479ac859)
 
 ![image](https://github.com/gd-hi/Omok/assets/148930703/632c10e5-75f8-48d4-af0b-a0f2f1582d59)
 
