@@ -8,6 +8,7 @@ import client.Data;
 import client.manager.MessageManager;
 import client.net.PlayChess;
 import client.ui.BoardCanvas;
+import client.ui.GameFrame;
 
 // 오목 판 리스너
 
@@ -21,6 +22,7 @@ public class BoardListener extends MouseAdapter {
 		// 서버와의 연결 확인
 		if (Data.connected) {
 			// 상대방 선택 확인
+
 			if (Data.oppoId != 0) {
 				// 상대방과의 게임 준비 확인
 				if (Data.ready) {

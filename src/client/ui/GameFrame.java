@@ -74,7 +74,7 @@ public class GameFrame extends JFrame {
 	public void showGamePanel() {
 		// 현재 창을 비활성화하고 로그인 패널을 제거
 		this.setVisible(false);
-		this.remove(getLoginPanel());
+		this.remove(getLobyPanel());
 
 		// 레이아웃을 BorderLayout으로 설정하고 게임 패널을 CENTER, 기능 패널을 EAST에 추가
 		this.setLayout(new BorderLayout());
@@ -107,10 +107,11 @@ public class GameFrame extends JFrame {
 		// 현재 창을 비활성화하고 로그인 패널을 제거
 		this.setVisible(false);
 		this.remove(getLoginPanel());
+		this.remove(getGamePanel());
 
 		// 레이아웃을 BorderLayout으로 설정하고 게임 패널을 CENTER, 기능 패널을 EAST에 추가
 		this.setLayout(new BorderLayout());
-		this.add(getLobyPanel(), BorderLayout.CENTER);
+		//this.add(getLobyPanel(), BorderLayout.CENTER);
 		this.add(getFunctionPanel(), BorderLayout.EAST);
 
 		// 창 크기를 자동으로 맞추고 화면 중앙에 표시

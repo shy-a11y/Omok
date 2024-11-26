@@ -21,22 +21,25 @@ public class MessageListener implements ActionListener {
 		// 상대방 ID 가져오기
 		int oppoId = Data.oppoId;
 
-		// 만약 상대방이 있다면
-		if (oppoId != 0) {
-			// 서버로 채팅 메시지 전송
-			IOManager.getInstance().getPs().println(Header.CHAT + message + "&" + oppoId);
-
-			// 입력 필드 초기화 및 내가 보낸 메시지 화면에 추가
-			GameFrame.getInstance().getFunctionPanel().getMessagePanel().getMessageTextField().setText("");
-			MessageManager.getInstance().addMessage("나: " + message);
-
-			// 만약 상대방이 없다면
-		} else {
-			// 상대방이 없을 때의 처리
-			MessageManager.getInstance().addMessage("상대방이 없습니다.");
-			// 입력 필드의 텍스트를 전체 선택. 사용자가 다음 메시지를 입력할 때 이전 메시지가 선택된 채로 있음
-			GameFrame.getInstance().getFunctionPanel().getMessagePanel().getMessageTextField().selectAll();
+		// 메시지가 비어 있으면 처리하지 않음
+		if (message.trim().isEmpty()) {
+			return;
 		}
+
+		// 서버로 채팅 메시지 전송
+		if (oppoId != 0) {
+			// 특정 상대에게 메시지 전송
+			IOManager.getInstance().getPs().println(Header.CHAT + message + "&" + oppoId);
+			MessageManager.getInstance().addMessage("나 (상대방): " + message);
+		} else {
+			// 전체 채팅 메시지 전송
+			IOManager.getInstance().getPs().println(Header.CHAT + message + "&0"); // oppoId = 0으로 명시
+			MessageManager.getInstance().addMessage("나 (전체): " + message);
+
+		}
+
+		// 입력 필드 초기화
+		GameFrame.getInstance().getFunctionPanel().getMessagePanel().getMessageTextField().setText("");
 	}
 
-}
+	}

@@ -1,7 +1,9 @@
 package server.tool;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import server.ui.ServerFrame;
 
@@ -88,6 +90,9 @@ public class HashMapManager {
 		ServerFrame.getInstance().getMatchsPanel().removeMatchs(uid);
 		// 매칭 정보를 HashMap에서 제거
 		getMatchs().remove(uid);
+	}
+	public List<Player> getAllPlayers() {
+		return new ArrayList<>(players.values());
 	}
 
 	// 게임 중인 플레이어들의 ID를 나타내는 HashMap을 반환하는 get 메소드

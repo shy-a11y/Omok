@@ -39,6 +39,8 @@ public class Resolver {
 	public void startMessage(String s) {
 		// 서버에서 전달된 게임 시작 메시지를 화면에 표시
 		MessageManager.getInstance().addMessage(s);
+		GameFrame.getInstance().showGamePanel();
+
 	}
 
 	// 게임 시작 처리 메소드
