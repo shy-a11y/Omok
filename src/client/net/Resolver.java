@@ -29,7 +29,7 @@ public class Resolver {
 		Data.myName = name;
 
 		// 게임 화면 표시
-		GameFrame.getInstance().showGamePanel();
+		GameFrame.getInstance().showLobyPanel();
 
 		// 플레이어 목록 업데이트 요청을 서버에 전송
 		IOManager.getInstance().getPs().println(Header.LIST);
