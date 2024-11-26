@@ -126,30 +126,31 @@ public class Action {
 
 	// 채팅 메시지 전송 메소드
 	public void sendMessage(int uid, String readLine) {
-		// 입력된 문자열을 "&"를 기준으로 분리하여 메시지와 대상 플레이어의 ID를 추출
-		String s[] = readLine.split("&");
-		String message = s[0];
-		int targetId = Integer.parseInt(s[1]);
-
-		// 대상 플레이어의 ID를 사용하여 해당 플레이어의 소켓을 가져옴
-		Socket socket = manager.getPlayer(targetId).socket;
-
 		try {
-			// 대상 플레이어의 소켓으로부터 출력 스트림을 얻어옴
-			PrintStream printStream = new PrintStream(socket.getOutputStream());
+			// 입력된 문자열을 "&"를 기준으로 분리
+			String[] s = readLine.split("&");
+			String message = s[0];
+			int targetId = (s.length > 1) ? Integer.parseInt(s[1]) : 0; // targetId가 없으면 전체 채팅으로 간주
 
-			// 채팅 메시지 생성 및 전송
-			// Header.CHAT: 채팅 메시지임을 나타냄
-			// message: 전송되는 채팅 메시지 내용
-			// "&": 구분자, 여러 정보를 하나의 문자열로 전송하기 위한 구분 용도
-			// uid: 채팅을 보내는 플레이어의 ID
-			// HashMapManager.getInstance().getName(uid): 채팅을 보내는 플레이어의 이름
-			printStream.println(Header.CHAT + message + "&" + uid + "-" + HashMapManager.getInstance().getName(uid));
-
+			if (targetId == 0) {
+				// 전체 채팅 처리: 모든 연결된 플레이어에게 메시지를 전송
+				for (Player player : manager.getAllPlayers()) {
+					Socket socket = player.socket;
+					PrintStream printStream = new PrintStream(socket.getOutputStream());
+					printStream.println(Header.CHAT + message + "&" + uid + "-" + HashMapManager.getInstance().getName(uid));
+				}
+			} else {
+				// 특정 대상에게 메시지 전송
+				Socket socket = manager.getPlayer(targetId).socket;
+				PrintStream printStream = new PrintStream(socket.getOutputStream());
+				printStream.println(Header.CHAT + message + "&" + uid + "-" + HashMapManager.getInstance().getName(uid));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+
 
 	// 도전 메시지 전송 메소드
 	public void sendChallenge(int uid, int target) {
