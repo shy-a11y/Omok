@@ -29,6 +29,15 @@ public class GameFrame extends JFrame {
 	private GameFrame() {
 		// JFrame의 제목을 "오목"으로 설정
 		super("오목");
+		
+		// 창 닫기 이벤트 처리
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// QuitListener의 cleanupAndExit 메소드를 호출하여 정상적으로 종료
+				new client.listener.QuitListener().cleanupAndExit();
+			}
+		});
 	}
 
 	// 싱글톤 인스턴스를 반환하는 메소드

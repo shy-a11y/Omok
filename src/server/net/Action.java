@@ -51,7 +51,7 @@ public class Action {
 		}
 	}
 
-	// 클라이언트 제더에 대한 처리 메소드
+	// 클라이언트 제거에 대한 처리 메소드
 	public void removeClient(int uid) {
 		// 플레이어 ID 집합 가져오기
 		Set<Integer> playerIds = manager.getPlayers().keySet();
@@ -130,27 +130,57 @@ public class Action {
 			// 입력된 문자열을 "&"를 기준으로 분리
 			String[] s = readLine.split("&");
 			String message = s[0];
-			int targetId = (s.length > 1) ? Integer.parseInt(s[1]) : 0; // targetId가 없으면 전체 채팅으로 간주
-
-			if (targetId == 0) {
-				// 전체 채팅 처리: 모든 연결된 플레이어에게 메시지를 전송
+			
+			// 귓속말인 경우
+			if (s.length == 3 && "whisper".equals(s[2])) {
+				String targetName = s[1];
+				// 대상 플레이어 찾기
+				Player targetPlayer = null;
 				for (Player player : manager.getAllPlayers()) {
-					Socket socket = player.socket;
+					if (player.name.equals(targetName)) {
+						targetPlayer = player;
+						break;
+					}
+				}
+				
+				if (targetPlayer != null) {
+					// 귓속말 대상에게만 메시지 전송
+					Socket socket = targetPlayer.socket;
+					PrintStream printStream = new PrintStream(socket.getOutputStream());
+					printStream.println(Header.CHAT + message + "&" + uid + "-" + HashMapManager.getInstance().getName(uid) + "&whisper");
+					
+					// 발신자에게도 메시지가 전송되었음을 알림
+					//Socket senderSocket = manager.getPlayer(uid).socket;
+					//PrintStream senderStream = new PrintStream(senderSocket.getOutputStream());
+					//senderStream.println(Header.CHAT + "귓속말이 전송되었습니다." + "&시스템&system");
+				} else {
+					// 대상 플레이어가 없는 경우, 발신자에게 오류 메시지 전송
+					Socket senderSocket = manager.getPlayer(uid).socket;
+					PrintStream senderStream = new PrintStream(senderSocket.getOutputStream());
+					senderStream.println(Header.CHAT + "'" + targetName + "' 사용자를 찾을 수 없습니다." + "&시스템&system");
+				}
+			} else {
+				// 일반 채팅 처리
+				int targetId = (s.length > 1) ? Integer.parseInt(s[1]) : 0;
+				
+				if (targetId == 0) {
+					// 전체 채팅 처리: 모든 연결된 플레이어에게 메시지를 전송
+					for (Player player : manager.getAllPlayers()) {
+						Socket socket = player.socket;
+						PrintStream printStream = new PrintStream(socket.getOutputStream());
+						printStream.println(Header.CHAT + message + "&" + uid + "-" + HashMapManager.getInstance().getName(uid));
+					}
+				} else {
+					// 특정 대상에게 메시지 전송
+					Socket socket = manager.getPlayer(targetId).socket;
 					PrintStream printStream = new PrintStream(socket.getOutputStream());
 					printStream.println(Header.CHAT + message + "&" + uid + "-" + HashMapManager.getInstance().getName(uid));
 				}
-			} else {
-				// 특정 대상에게 메시지 전송
-				Socket socket = manager.getPlayer(targetId).socket;
-				PrintStream printStream = new PrintStream(socket.getOutputStream());
-				printStream.println(Header.CHAT + message + "&" + uid + "-" + HashMapManager.getInstance().getName(uid));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-
 
 	// 도전 메시지 전송 메소드
 	public void sendChallenge(int uid, int target) {
@@ -232,7 +262,6 @@ public class Action {
 
 		// 플레이어를 레디 상태로 설정
 		manager.getReadys().add(uid);
-
 
 		// 현재 플레이어의 ID가 매치 리스트에 있으면
 		if (manager.getMatchs().containsKey(uid)) {
@@ -348,4 +377,30 @@ public class Action {
 		manager.getFightManagers().remove(oppoId);
 	}
 
+	// 클라이언트 연결 종료 처리 메소드
+	public void handleDisconnect(int uid) {
+		try {
+			// 서버 로그에 연결 종료 메시지 기록
+			server.tool.MessageManager.getInstance().addMessage("플레이어 " + uid + "(" + 
+				HashMapManager.getInstance().getName(uid) + ") 접속 종료");
+			
+			// 상대방이 있는 경우 상대방에게도 알림
+			if (manager.getMatchs().containsKey(uid)) {
+				int oppoId = manager.getMatchs().get(uid);
+				quit(uid, oppoId);
+			}
+			
+			// 플레이어 목록에서 제거
+			removeClient(uid);
+			
+			// 플레이어 정보 정리
+			manager.getPlayers().remove(uid);
+			manager.getReadys().remove(uid);
+			manager.getMatching().remove(uid);
+			manager.getFightManagers().remove(uid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

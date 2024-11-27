@@ -22,5 +22,6 @@ public class Header {
 	public final static String START = "[STAR]"; // 게임 시작 메시지를 나타내는 헤더
 	public final static String WIN = "[UWIN]"; // 승리 메시지를 나타내는 헤더
 	public final static String LOSE = "[LOSE]"; // 패배 메시지를 나타내는 헤더
+	public final static String DISCONNECT = "[DISC]"; // 연결 종료 메시지를 나타내는 헤더
 
 }
