@@ -34,7 +34,7 @@ public class MessageListener implements ActionListener {
 		} else {
 			// 전체 채팅 메시지 전송
 			IOManager.getInstance().getPs().println(Header.CHAT + message + "&0"); // oppoId = 0으로 명시
-			
+
 
 		}
 
