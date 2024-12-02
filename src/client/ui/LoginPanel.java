@@ -174,7 +174,7 @@ public class LoginPanel extends JPanel {
     public JTextField getNameTextField() {
         // nameTextField가 아직 생성되지 않았다면 생성하고 초기 설정
         if (nameTextField == null) {
-            nameTextField = new JTextField("닉네임 입력", 22); // 닉네임 초기 설정
+            nameTextField = new JTextField("", 22); // 닉네임 초기 설정
             nameTextField.setToolTipText("닉네임");
             nameTextField.setEditable(true);
         }

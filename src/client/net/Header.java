@@ -1,6 +1,5 @@
 package client.net;
 
-
 // 클라이언트 통신 메세지 정의
 
 public class Header {
@@ -52,5 +51,8 @@ public class Header {
 
 	// 패배 메시지
 	public final static String LOSE = "[LOSE]";
+
+	// 연결 종료 메시지
+	public final static String DISCONNECT = "[DISC]";
 
 }

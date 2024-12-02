@@ -13,7 +13,7 @@ public class MessageManager {
 	private JTextArea messageArea = null;
 
 	private MessageManager() {
-		// private 생성자 👉 외부 인스턴스 생성 ❌
+		// private 생성자 
 	}
 
 	// 인스턴스에 접근할 수 있는 정적 메소드
@@ -28,14 +28,16 @@ public class MessageManager {
 	public JTextArea getMessageArea() {
 		if (messageArea == null) {
 			messageArea = new JTextArea(12, 19);
-			messageArea.setEditable(false);  // 읽기만 가능
-			messageArea.setLineWrap(true);   // 자동 줄 바꿈
+			messageArea.setEditable(false);  // 
+			messageArea.setLineWrap(true);   // 
 		}
 		return messageArea;
 	}
 
 	// 채팅 창에 메세지 표시
 	public void addMessage(String message) {
-		getMessageArea().append("•" + message + System.lineSeparator());
+		JTextArea area = getMessageArea();
+		area.append("•" + message + System.lineSeparator());
+		area.setCaretPosition(area.getDocument().getLength());  // 
 	}
 }

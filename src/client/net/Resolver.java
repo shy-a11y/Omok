@@ -29,7 +29,7 @@ public class Resolver {
 		Data.myName = name;
 
 		// 게임 화면 표시
-		GameFrame.getInstance().showGamePanel();
+		GameFrame.getInstance().showLobyPanel();
 
 		// 플레이어 목록 업데이트 요청을 서버에 전송
 		IOManager.getInstance().getPs().println(Header.LIST);
@@ -39,6 +39,8 @@ public class Resolver {
 	public void startMessage(String s) {
 		// 서버에서 전달된 게임 시작 메시지를 화면에 표시
 		MessageManager.getInstance().addMessage(s);
+		GameFrame.getInstance().showGamePanel();
+
 	}
 
 	// 게임 시작 처리 메소드
@@ -146,9 +148,17 @@ public class Resolver {
 		String str[] = s.split("&");
 		String message = str[0];
 		String who = str[1];
+		boolean isWhisper = str.length > 2 && "whisper".equals(str[2]);
+		boolean isSystem = str.length > 2 && "system".equals(str[2]);
 
 		// MessageManager 클래스를 사용하여 채팅 메세지를 텍스트 화면에 출력
-		MessageManager.getInstance().addMessage(who + "님의 채팅: " + message);
+		if (isSystem) {
+			MessageManager.getInstance().addMessage("[시스템] " + message);
+		} else if (isWhisper) {
+			MessageManager.getInstance().addMessage("(귓속말) " + who + "님의 귓속말: " + message);
+		} else {
+			MessageManager.getInstance().addMessage(who + "님의 채팅: " + message);
+		}
 	}
 
 	// 동작 메소드

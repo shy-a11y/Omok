@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
+import client.net.Header;
 import server.tool.HashMapManager;
 import server.tool.MessageManager;
 
@@ -67,13 +68,13 @@ public class Resolver {
 			// 동작 명령 처리
 			if (readLine.startsWith(Header.OPERATION)) {
 				// Header.OPERATION 이후의 문자열을 추출
-				String str = readLine.substring(Header.OPERATION.length());
+				String operation = readLine.substring(Header.OPERATION.length());
 
 				// 플레이어 도전 명령 처리
-				if (str.startsWith(Header.CHALLENGE)) {
-					str = str.substring(Header.CHALLENGE.length());
+				if (operation.startsWith(Header.CHALLENGE)) {
+					operation = operation.substring(Header.CHALLENGE.length());
 					// Header.CHALLENGE 이후의 문자열을 추출하고, 정수로 변환하여 target 변수에 저장
-					int target = Integer.parseInt(str);
+					int target = Integer.parseInt(operation);
 					// 도전 명령을 Action 클래스의 sendChallenge 메소드에 전달
 					new Action().sendChallenge(uid, target);
 					// 매칭 정보를 갱신
@@ -81,31 +82,36 @@ public class Resolver {
 				}
 
 				// 준비 명령 처리
-				if (str.startsWith(Header.START)) {
+				if (operation.startsWith(Header.START)) {
 					// 준비 명령을 Action 클래스의 ready 메소드에 전달
 					new Action().ready(uid);
 				}
 
 				// 재시작 명령 처리
-				if (str.startsWith(Header.RESTART)) {
+				if (operation.startsWith(Header.RESTART)) {
 					// 재시작 명령을 Action 클래스의 restart 메소드에 전달
 					new Action().restart(uid);
 				}
 
 				// 나가기 명령 처리
-				if (str.startsWith(Header.QUIT)) {
+				if (operation.startsWith(Header.QUIT)) {
 					// Header.QUIT 이후의 문자열을 추출하고, 정수로 변환하여 oppoId 변수에 저장
-					int oppoId = Integer.parseInt(str.substring(Header.QUIT.length()));
+					int oppoId = Integer.parseInt(operation.substring(Header.QUIT.length()));
 					// 나가기 명령을 Action 클래스의 quit 메소드에 전달
 					new Action().quit(uid, oppoId);
 				}
 
 				// 포기 명령 처리
-				if (str.startsWith(Header.GIVEUP)) {
+				if (operation.startsWith(Header.GIVEUP)) {
 					// Header.GIVEUP 이후의 문자열을 추출하고, 정수로 변환하여 oppoId 변수에 저장
-					int oppoId = Integer.parseInt(str.substring(Header.GIVEUP.length()));
+					int oppoId = Integer.parseInt(operation.substring(Header.GIVEUP.length()));
 					// 포기 명령을 Action 클래스의 giveUp 메소드에 전달
 					new Action().giveUp(uid, oppoId);
+				}
+
+				// 연결 종료
+				if (operation.startsWith(Header.DISCONNECT)) {
+					new Action().handleDisconnect(uid);
 				}
 			}
 
