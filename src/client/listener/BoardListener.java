@@ -31,7 +31,7 @@ public class BoardListener extends MouseAdapter {
 						// 내 차례인지 확인
 						if (Data.turn == Data.myChess) {
 							// 마우스 클릭 위치가 오목 판 범위 안에 있는지 확인
-							if (e.getX() < canvas.getMapWidth() - 6 && e.getY() < canvas.getHeight() - 7) {
+							if (e.getX() < canvas.getWidth() - 6 && e.getY() < canvas.getHeight() - 7) {
 								// 클릭한 위치를 오목 보드 상의 좌표로 변환
 								int x = e.getX() / 35;
 								int y = e.getY() / 35;
